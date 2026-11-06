@@ -150,12 +150,24 @@ function show() {
   }));
 }
 function result() {
-  $('#question').hidden = true; $('#result').hidden = false;
   const max = Math.max(...KEYS.map(k => count[k]));
   const top = KEYS.filter(k => count[k] === max);
-  $('#rtitle').textContent = `Your style: ${top.map(k => STYLES[k].name).join(' and ')}`;
-  $('#rdesc').textContent = top.map(k => STYLES[k].desc).join(' ');
-  $('#rtip').innerHTML = `<strong>Tip:</strong> ${top.map(k => STYLES[k].tip).join(' ')}`;
+  if (top.length > 1) return tieBreak(top);
+  showResult(top[0]);
+}
+function tieBreak(top) {
+  $('#qnum').textContent = 'One last question';
+  $('#bar').style.width = '100%';
+  $('#qtext').textContent = 'Your answers are split. Which sentence describes you best?';
+  $('#choices').innerHTML = top.map(k => `<button data-k="${k}">${STYLES[k].desc}</button>`).join('');
+  document.querySelectorAll('#choices button').forEach(b => b.addEventListener('click', () => showResult(b.dataset.k)));
+}
+function showResult(k0) {
+  $('#question').hidden = true; $('#result').hidden = false;
+  const s = STYLES[k0];
+  $('#rtitle').textContent = `Your main style: ${s.name}`;
+  $('#rdesc').textContent = s.desc;
+  $('#rtip').innerHTML = `<strong>Tip:</strong> ${s.tip}`;
   $('#bars').innerHTML = KEYS.map(k => `<div class="bar-row"><span>${STYLES[k].name}</span><span class="bar"><span style="width:${count[k] * 10}%"></span></span><span>${count[k]}/10</span></div>`).join('');
 }
 $('#start').addEventListener('click', start);

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>What’s your communication style?</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --lab-teal: #069494; --lab-teal-light: #e6f7f7; --lab-black: #1a1a1a; --lab-white: #ffffff;
+  --lab-grey-mid: #555555; --lab-grey-light: #f5f5f5; --lab-grey-border: #e0e0e0;
+  --lab-footer-bg: #1a1a1a; --lab-footer-text: #cccccc;
+  --surface: #ffffff; --page: #f5f5f5; --on-teal: #ffffff;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; font-family: 'DM Sans', 'Helvetica Neue', Arial, sans-serif; color: var(--lab-black); background: var(--page); line-height: 1.6; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+a { color: var(--lab-teal); }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--lab-grey-border); }
+header.top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding-top: 10px; padding-bottom: 10px; }
+.brand { font-weight: 700; }
+.credit { font-size: 0.875rem; color: var(--lab-grey-mid); }
+.hero { background: var(--lab-teal); color: var(--on-teal); text-align: center; padding: 56px 0; }
+.hero h1 { font-size: 2.5rem; margin: 0 0 8px; line-height: 1.2; }
+.hero p { margin: 0; }
+nav.tabs-bar { background: var(--surface); border-bottom: 1px solid var(--lab-grey-border); }
+nav.tabs-bar .wrap { display: flex; flex-wrap: wrap; }
+.tab-btn { font: inherit; font-size: 0.875rem; font-weight: 700; border: 0; background: transparent; color: var(--lab-grey-mid); padding: 14px 18px; cursor: pointer; }
+.tab-btn.active { background: var(--lab-teal); color: var(--on-teal); }
+button:focus-visible { outline: 3px solid var(--lab-black); outline-offset: 2px; }
+main { padding: 48px 0 64px; }
+.panel { display: none; }
+.panel.active { display: block; }
+.card { background: var(--surface); border: 1px solid var(--lab-grey-border); padding: 24px; margin-bottom: 20px; }
+h2 { font-size: 1.75rem; margin: 0 0 12px; }
+h3 { font-size: 1.25rem; margin: 0 0 10px; }
+.note { background: var(--lab-teal-light); border-left: 4px solid var(--lab-teal); padding: 12px 16px; margin: 12px 0; }
+.meta { font-size: 0.875rem; color: var(--lab-grey-mid); font-weight: 700; margin-bottom: 4px; }
+.progress { height: 8px; background: var(--lab-grey-border); margin: 8px 0 20px; }
+.progress span { display: block; height: 100%; background: var(--lab-teal); width: 0; }
+.situation { font-weight: 700; margin: 4px 0 10px; }
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.option { border: 1px solid var(--lab-grey-border); padding: 14px 16px; background: var(--page); }
+.option b { color: var(--lab-teal); display: block; margin-bottom: 4px; }
+.scale { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.scale button { font: inherit; font-weight: 500; padding: 12px 8px; background: var(--surface); color: var(--lab-black); border: 1px solid var(--lab-teal); cursor: pointer; }
+.scale button:hover { background: var(--lab-teal-light); }
+.scale button.chosen { background: var(--lab-teal); color: var(--on-teal); }
+.nav-row { display: flex; justify-content: space-between; margin-top: 16px; gap: 8px; }
+.btn { font: inherit; font-weight: 700; background: var(--lab-teal); color: var(--on-teal); border: 0; padding: 10px 18px; cursor: pointer; }
+.btn.ghost { background: var(--surface); color: var(--lab-teal); border: 1px solid var(--lab-teal); font-size: 0.875rem; padding: 8px 14px; }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.choices { display: block; }
+.choice { display: block; width: 100%; font: inherit; text-align: left; padding: 10px 14px; margin: 6px 0; background: var(--surface); color: var(--lab-black); border: 1px solid var(--lab-grey-border); cursor: pointer; }
+.choice:hover { border-color: var(--lab-teal); }
+.choice.chosen { background: var(--lab-teal-light); border-left: 4px solid var(--lab-teal); color: var(--lab-black); }
+.bar-row { display: grid; grid-template-columns: 130px 1fr 40px; gap: 12px; align-items: center; margin: 8px 0; font-weight: 700; }
+.bar { height: 16px; background: var(--lab-teal-light); border: 1px solid var(--lab-grey-border); }
+.bar span { display: block; height: 100%; background: var(--lab-teal); }
+.style-card h3 { margin-top: 0; }
+.style-card .label { font-size: 0.875rem; font-weight: 700; color: var(--lab-grey-mid); text-transform: uppercase; letter-spacing: 0.04em; margin: 12px 0 4px; }
+.dim { margin-bottom: 24px; }
+.poles { display: flex; justify-content: space-between; font-weight: 700; font-size: 0.95rem; }
+.track { position: relative; height: 14px; background: var(--lab-teal-light); border: 1px solid var(--lab-grey-border); margin: 6px 0 10px; }
+.track .mid { position: absolute; left: 50%; top: -4px; bottom: -4px; width: 2px; background: var(--lab-grey-border); }
+.track .dot { position: absolute; top: -6px; width: 24px; height: 24px; margin-left: -12px; background: var(--lab-teal); border: 3px solid var(--surface); }
+.tip { font-size: 0.95rem; color: var(--lab-grey-mid); margin: 6px 0 0; }
+ul.src { padding-left: 20px; }
+footer { background: var(--lab-footer-bg); color: var(--lab-footer-text); padding: 28px 0; font-size: 0.875rem; }
+footer a { color: var(--lab-footer-text); }
+@media (max-width: 768px) { .hero h1 { font-size: 2rem; } main { padding: 32px 0 40px; } }
+@media (max-width: 480px) { .options { grid-template-columns: 1fr; } .scale { grid-template-columns: 1fr 1fr; } .hero h1 { font-size: 1.7rem; } }
+.choices button { display: block; width: 100%; font: inherit; text-align: left; padding: 10px 14px; margin: 6px 0; background: var(--surface); color: var(--lab-black); border: 1px solid var(--lab-grey-border); cursor: pointer; }
+.choices button:hover { border-color: var(--lab-teal); }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <span class="credit">Designed by <a href="https://www.linkedin.com/in/hagu1/" target="_blank" rel="noopener">Hamid Guedra</a> (Language Centre, <a href="https://lab.fi/en" target="_blank" rel="noopener">LAB University of Applied Sciences</a>)</span>
+</div></header>
+
+<section class="hero"><div class="wrap">
+  <h1>What’s your communication style?</h1>
+</div></section>
+
+<main><div class="wrap">
+  <div class="card" id="intro">
+    <p style="margin-top:0">Ten questions. Choose the answer that is closest to you. There are no right or wrong answers.</p>
+    <button class="btn" id="start">Start</button>
+  </div>
+  <div class="card" id="question" hidden>
+    <div class="meta" id="qnum"></div>
+    <div class="progress"><span id="bar"></span></div>
+    <div class="situation" id="qtext"></div>
+    <div class="choices" id="choices"></div>
+  </div>
+  <div class="card" id="result" hidden>
+    <h2 id="rtitle"></h2>
+    <p id="rdesc"></p>
+    <p id="rtip"></p>
+    <div id="bars"></div>
+    <p class="meta" style="margin-top:16px">Most people are a mix of styles.</p>
+    <button class="btn ghost" id="restart">Start again</button>
+  </div>
+</div></main>
+
+<footer><div class="wrap">
+  Designed by <a href="https://www.linkedin.com/in/hagu1/" target="_blank" rel="noopener">Hamid Guedra</a> (Language Centre, <a href="https://lab.fi/en" target="_blank" rel="noopener">LAB University of Applied Sciences</a>) · Based on <a href="https://professional.dce.harvard.edu/blog/is-your-workplace-communication-style-as-effective-as-it-could-be/" target="_blank" rel="noopener">Harvard DCE (Emerson 2022)</a> · Created with Claude Opus 5.5
+</div></footer>
+
+<script>
+const STYLES = {
+  D: { name: 'Direct', desc: 'You like short, clear communication based on facts, and you focus on results.', tip: 'Others may find you blunt. Add a friendly word or two.' },
+  F: { name: 'Functional', desc: 'You like process, precision and detail, and you plan carefully.', tip: 'Others may need the big picture first. Keep the details for later.' },
+  C: { name: 'Collaborative', desc: 'You focus on people and look for solutions that work for everyone.', tip: 'Decisions may take you longer. Agree on a deadline for deciding.' },
+  I: { name: 'Influencer', desc: 'You are a “people person”: you enjoy ideas, small talk and the “why”.', tip: 'Details may slip. Agree on clear next steps.' }
+};
+const QS = [
+  ['In a meeting, you prefer to…', 'get straight to the decision.', 'go through the plan step by step.', 'make sure everyone has had a chance to speak.', 'share ideas and keep the mood positive.'],
+  ['Your work emails are usually…', 'short and to the point.', 'detailed and well organised.', 'polite, asking for other people’s views.', 'friendly and personal.'],
+  ['Small talk at work is…', 'not really necessary.', 'fine, but the task comes first.', 'a good way to include everyone.', 'one of the best parts of the day.'],
+  ['When you make a decision, you…', 'decide quickly, based on the facts.', 'collect all the information first.', 'want everyone to agree.', 'follow what feels right.'],
+  ['A new project starts. First, you want to know…', 'the goal and the deadline.', 'the process and who does what.', 'how the team will work together.', 'why the project matters.'],
+  ['When you give feedback, you…', 'say clearly what needs to change.', 'give detailed examples.', 'make sure the person feels supported.', 'focus on the positives.'],
+  ['What annoys you most at work?', 'Long meetings with no decisions.', 'Unclear instructions.', 'Conflict.', 'Too many rules.'],
+  ['Colleagues might describe you as…', 'efficient and decisive.', 'careful and reliable.', 'patient and a good listener.', 'enthusiastic and sociable.'],
+  ['When there is a problem, you…', 'act quickly to solve it.', 'analyse it carefully first.', 'talk it through with the people involved.', 'brainstorm ideas with others.'],
+  ['You do your best work when…', 'you have clear goals and freedom.', 'expectations are clear.', 'the team is cooperative.', 'you can share ideas with people.']
+];
+const KEYS = ['D', 'F', 'C', 'I'];
+let i = 0, count = {};
+const $ = s => document.querySelector(s);
+function start() { i = 0; count = { D: 0, F: 0, C: 0, I: 0 }; $('#intro').hidden = true; $('#result').hidden = true; $('#question').hidden = false; show(); }
+function show() {
+  const q = QS[i];
+  $('#qnum').textContent = `Question ${i + 1} of ${QS.length}`;
+  $('#bar').style.width = `${(i / QS.length) * 100}%`;
+  $('#qtext').textContent = q[0];
+  const order = KEYS.slice().sort(() => Math.random() - 0.5);
+  $('#choices').innerHTML = order.map(k => `<button data-k="${k}">${q[KEYS.indexOf(k) + 1]}</button>`).join('');
+  document.querySelectorAll('#choices button').forEach(b => b.addEventListener('click', () => {
+    count[b.dataset.k]++; i++;
+    i < QS.length ? show() : result();
+  }));
+}
+function result() {
+  $('#question').hidden = true; $('#result').hidden = false;
+  const max = Math.max(...KEYS.map(k => count[k]));
+  const top = KEYS.filter(k => count[k] === max);
+  $('#rtitle').textContent = `Your style: ${top.map(k => STYLES[k].name).join(' and ')}`;
+  $('#rdesc').textContent = top.map(k => STYLES[k].desc).join(' ');
+  $('#rtip').innerHTML = `<strong>Tip:</strong> ${top.map(k => STYLES[k].tip).join(' ')}`;
+  $('#bars').innerHTML = KEYS.map(k => `<div class="bar-row"><span>${STYLES[k].name}</span><span class="bar"><span style="width:${count[k] * 10}%"></span></span><span>${count[k]}/10</span></div>`).join('');
+}
+$('#start').addEventListener('click', start);
+$('#restart').addEventListener('click', start);
+</script>
+</body>
+</html>
